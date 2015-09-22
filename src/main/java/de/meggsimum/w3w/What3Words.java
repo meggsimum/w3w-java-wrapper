@@ -64,8 +64,10 @@ public class What3Words {
 	 *            the 3 words representing the "w3w-address"
 	 * @return array holding the position in the form [lat, lon]
 	 * @throws IOException
+	 * @throws What3WordsException 
 	 */
-	public double[] wordsToPosition(String[] words) throws IOException {
+	public double[] wordsToPosition(String[] words) throws IOException,
+			What3WordsException {
 
 		String url = this.baseUrl + "w3w?key=" + this.apiKey + "&string="
 				+ words[0] + "." + words[1] + "." + words[2] + "&lang="
@@ -73,14 +75,31 @@ public class What3Words {
 
 		String response = this.doHttpGet(url);
 
-		// parse the coordinates out of the JSON
-		JSONObject json = new JSONObject(response);
-		JSONArray jsonCoords = (JSONArray) json.get("position");
-		double[] coords = new double[2];
-		coords[0] = jsonCoords.getDouble(0);
-		coords[1] = jsonCoords.getDouble(1);
+		try {
+			// parse the coordinates out of the JSON
+			JSONObject json = new JSONObject(response);
+			if (json.has("position") == true) {
+				JSONArray jsonCoords = (JSONArray) json.get("position");
+				double[] coords = new double[2];
+				coords[0] = jsonCoords.getDouble(0);
+				coords[1] = jsonCoords.getDouble(1);
 
-		return coords;
+				return coords;
+
+			} else if (json.has("error")) {
+
+				throw new Exception("Error returned from w3w API: "
+						+ json.getString("message"));
+
+			} else {
+				throw new What3WordsException(
+						"Undefined error while fetching words by position");
+			}
+
+		} catch (Exception e) {
+			throw new What3WordsException(e.getMessage(), e);
+		}
+
 	}
 
 	/**
@@ -90,8 +109,10 @@ public class What3Words {
 	 *            Coordinates to be transformed in the form [lat, lon]
 	 * @return Array holding the "w3w-address" in the form [word1, word2, word3]
 	 * @throws IOException
+	 * @throws What3WordsException 
 	 */
-	public String[] positionToWords(Double[] coords) throws IOException {
+	public String[] positionToWords(Double[] coords)
+			throws What3WordsException, IOException {
 
 		String url = this.baseUrl + "position?key=" + this.apiKey
 				+ "&position=" + coords[0] + "," + coords[1] + "&lang="
@@ -99,15 +120,33 @@ public class What3Words {
 
 		String response = this.doHttpGet(url);
 
-		// parse the words out of the JSON
-		JSONObject json = new JSONObject(response);
-		JSONArray jsonWords = (JSONArray) json.get("words");
-		String[] words = new String[3];
-		words[0] = jsonWords.getString(0);
-		words[1] = jsonWords.getString(1);
-		words[2] = jsonWords.getString(2);
+		try {
+			// parse the words out of the JSON
+			JSONObject json = new JSONObject(response);
 
-		return words;
+			if (json.has("words") == true) {
+				JSONArray jsonWords = (JSONArray) json.get("words");
+				String[] words = new String[3];
+				words[0] = jsonWords.getString(0);
+				words[1] = jsonWords.getString(1);
+				words[2] = jsonWords.getString(2);
+
+				return words;
+
+			} else if (json.has("error")) {
+
+				throw new Exception("Error returned from w3w API: "
+						+ json.getString("message"));
+
+			} else {
+				throw new What3WordsException(
+						"Undefined error while fetching words by position");
+			}
+
+		} catch (Exception e) {
+			throw new What3WordsException(e);
+		}
+
 	}
 
 	/**

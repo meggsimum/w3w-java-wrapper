@@ -86,5 +86,22 @@ public class What3WordsTest extends TestCase {
 			assertTrue(false);
 		}
 	}
-	
+
+	/**
+	 * Test for exception in case of an invalid API-key
+	 */
+	public void testWhat3WordsException() {
+		What3Words w3w = new What3Words("my-senseless-key");
+		Double[] coords = { 49.422636, 8.320833 };
+		boolean thrown = false;
+		try {
+			w3w.positionToWords(coords);
+		} catch (Exception e) {
+			thrown = true;
+			assertEquals("Error returned from w3w API: Missing or invalid key",
+					e.getCause().getMessage());
+		}
+		assertTrue(thrown);
+	}
+
 }
