@@ -111,7 +111,7 @@ public class What3Words {
 	 * @throws IOException
 	 * @throws What3WordsException 
 	 */
-	public String[] positionToWords(Double[] coords)
+	public String[] positionToWords(double[] coords)
 			throws What3WordsException, IOException {
 
 		String url = this.baseUrl + "position?key=" + this.apiKey
