@@ -1,16 +1,21 @@
 # w3w-java-wrapper
-Java wrapper for the [what3words](http://what3words.com/)[web-API](http://developer.what3words.com/api).
+Java wrapper for the [what3words](http://what3words.com/) [web-API](http://developer.what3words.com/api).
 
 Use the what3words API in your Java applications.
 
 ## Methods
 
-  ```double[] wordsToPosition(String[] words)```
+  ```java
+  double[] wordsToPosition(String[] words)
+  ```
 
-    Converts a 3 words 'address' into a position
-  ```String[] positionToWords(Double[] coords)```
+  Converts a 3 words 'address' into a position
 
-    Converts a position into a 3 words 'address'
+  ```java
+  String[] positionToWords(double[] coords)
+  ```
+
+  Converts a position into a 3 words 'address'
 
 ## Code Samples
 
