@@ -55,7 +55,7 @@ public class What3WordsTest extends TestCase {
 	 */
 	public void testPositionToWords() {
 		What3Words w3w = new What3Words(API_KEY);
-		Double[] coords = {49.422636, 8.320833};
+		double[] coords = {49.422636, 8.320833};
 		String[] words;
 		try {
 			words = w3w.positionToWords(coords);
@@ -74,7 +74,7 @@ public class What3WordsTest extends TestCase {
 	public void testChangeLang() {
 		What3Words w3w = new What3Words(API_KEY);
 		w3w.setLanguage("de");
-		Double[] coords = {49.422636, 8.320833};
+		double[] coords = {49.422636, 8.320833};
 		String[] words;
 		try {
 			words = w3w.positionToWords(coords);
@@ -92,7 +92,7 @@ public class What3WordsTest extends TestCase {
 	 */
 	public void testWhat3WordsException() {
 		What3Words w3w = new What3Words("my-senseless-key");
-		Double[] coords = { 49.422636, 8.320833 };
+		double[] coords = { 49.422636, 8.320833 };
 		boolean thrown = false;
 		try {
 			w3w.positionToWords(coords);
