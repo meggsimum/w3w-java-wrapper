@@ -91,7 +91,7 @@ public class What3WordsTest extends TestCase {
 	 * Test for exception in case of an invalid API-key
 	 */
 	public void testWhat3WordsException() {
-		What3Words w3w = new What3Words("my-senseless-key");
+		What3Words w3w = new What3Words(API_KEY);
 		double[] coords = { 49.422636, 8.320833 };
 		boolean thrown = false;
 		try {
