@@ -91,7 +91,7 @@ public class What3WordsTest extends TestCase {
 	 * Test for exception in case of an invalid API-key
 	 */
 	public void testWhat3WordsException() {
-		What3Words w3w = new What3Words(API_KEY);
+		What3Words w3w = new What3Words("non-existing-api-key");
 		double[] coords = { 49.422636, 8.320833 };
 		boolean thrown = false;
 		try {
