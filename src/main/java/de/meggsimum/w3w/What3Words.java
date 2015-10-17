@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 /**
  * A Java wrapper for the What3Words Web-API.
- * 
+ *
  * @see http://developer.what3words.com/api/
  * 
  * @author Christian Mayer, meggsimum
@@ -50,7 +50,7 @@ public class What3Words {
 	 * given language.
 	 *
 	 * @param apiKey
-	 * @param language
+	 * @param language default Language
 	 */
 	public What3Words(String apiKey, String language) {
 		this.apiKey = apiKey;
@@ -58,20 +58,32 @@ public class What3Words {
 	}
 
 	/**
-	 * Converts 3 words into a position.
+	 * Converts 3 words into a position specifying default language.
 	 *
 	 * @param words
 	 *            the 3 words representing the "w3w-address"
 	 * @return array holding the position in the form [lat, lon]
 	 * @throws IOException
-	 * @throws What3WordsException 
+	 * @throws What3WordsException
 	 */
 	public double[] wordsToPosition(String[] words) throws IOException,
 			What3WordsException {
+		return wordsToPosition(words, this.language);
+	}
 
-		String url = this.baseUrl + "w3w?key=" + this.apiKey + "&string="
-				+ words[0] + "." + words[1] + "." + words[2] + "&lang="
-				+ this.language;
+	/**
+	 * Converts 3 words into a position.
+	 *
+	 * @param words
+	 *            the 3 words representing the "w3w-address"
+	 * @param language
+	 * @return array holding the position in the form [lat, lon]
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
+	public double[] wordsToPosition(String[] words, String language) throws IOException,
+				What3WordsException {
+		String url = String.format("%sw3w?key=%s&string=%s.%s.%s&lang=%s" ,this.baseUrl, this.apiKey, words[0], words[1], words[2], language);
 
 		String response = this.doHttpGet(url);
 
@@ -88,7 +100,7 @@ public class What3Words {
 
 			} else if (json.has("error")) {
 
-				throw new Exception("Error returned from w3w API: "
+				throw new What3WordsException("Error returned from w3w API: "
 						+ json.getString("message"));
 
 			} else {
@@ -103,20 +115,33 @@ public class What3Words {
 	}
 
 	/**
-	 * Converts a position into a "w3w-address".
+	 * Converts a position into a "w3w-address" with default language.
 	 *
 	 * @param coords
 	 *            Coordinates to be transformed in the form [lat, lon]
 	 * @return Array holding the "w3w-address" in the form [word1, word2, word3]
 	 * @throws IOException
-	 * @throws What3WordsException 
+	 * @throws What3WordsException
 	 */
 	public String[] positionToWords(double[] coords)
 			throws What3WordsException, IOException {
+		return positionToWords(coords, this.language);
+	}
 
-		String url = this.baseUrl + "position?key=" + this.apiKey
-				+ "&position=" + coords[0] + "," + coords[1] + "&lang="
-				+ this.language;
+	/**
+	 * Converts a position into a "w3w-address".
+	 *
+	 * @param coords
+	 *            Coordinates to be transformed in the form [lat, lon]
+	 * @param language
+	 *            Language for the "w3w-address"
+	 * @return Array holding the "w3w-address" in the form [word1, word2, word3]
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
+	public String[] positionToWords(double[] coords, String language)
+		throws What3WordsException, IOException {
+		String url = String.format("%sposition?key=%s&position=%s,%s&lang=%s" ,this.baseUrl, this.apiKey, coords[0], coords[1], language);
 
 		String response = this.doHttpGet(url);
 
@@ -135,7 +160,7 @@ public class What3Words {
 
 			} else if (json.has("error")) {
 
-				throw new Exception("Error returned from w3w API: "
+				throw new What3WordsException("Error returned from w3w API: "
 						+ json.getString("message"));
 
 			} else {
@@ -180,7 +205,7 @@ public class What3Words {
 	 * @return the language
 	 */
 	public String getLanguage() {
-		return language;
+		return this.language;
 	}
 
 	/**
