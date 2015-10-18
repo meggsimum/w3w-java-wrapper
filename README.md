@@ -48,9 +48,8 @@ try {
 JDK and Maven need to be installed on your system.
 
   * Clone this repository
-  * Enter your w3w API-key in the [What3WordsTest class](https://github.com/meggsimum/w3w-java-wrapper/blob/master/src/test/java/de/meggsimum/w3w/What3WordsTest.java#L17)
-  * Run ``mvn package`` or
-  * Run ``mvn package -DskipTests`` (in case you do not want to enter your API-key)
+  * Run ``mvn package -DW3W_API_KEY=YOUR-API-KEY`` or
+  * Run ``mvn package`` in case you do not want to enter your API key for test. Tests requiring API key will be skipped.
   * Under ``target/`` you will find the file ``w3w-java-wrapper-<version>-jar-with-dependencies.jar`` which can be embedded into your Java application
 
 ## Contributions
