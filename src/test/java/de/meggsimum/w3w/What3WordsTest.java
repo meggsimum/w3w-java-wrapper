@@ -157,4 +157,31 @@ public class What3WordsTest extends TestCase {
 		assertTrue(thrown);
 	}
 
+	public void testNonAsciiCharatersFR() {
+		What3Words w3w = new What3Words(API_KEY, "fr");
+		String[] words = {"noël", "étain", "rizière"};
+		double[] coords;
+		try {
+			coords = w3w.wordsToPosition(words);
+			assertEquals(2, coords.length);
+			assertEquals(-21.951124, coords[0]);
+			assertEquals(166.685219, coords[1]);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
+
+	public void testNonAsciiCharactersDE() {
+		What3Words w3w = new What3Words(API_KEY, "de");
+		String[] words = {"winkel", "artenschutz", "fängen"};
+		double[] coords;
+		try {
+			coords = w3w.wordsToPosition(words);
+			assertEquals(2, coords.length);
+			assertEquals(49.423903, coords[0]);
+			assertEquals(8.282732, coords[1]);
+		} catch (Exception e) {
+			assertTrue(false);
+		}
+	}
 }
