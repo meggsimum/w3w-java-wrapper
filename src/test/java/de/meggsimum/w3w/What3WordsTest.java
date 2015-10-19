@@ -104,4 +104,40 @@ public class What3WordsTest {
         w3w.positionToWords(coords);
     }
 
+    // Object API tests
+
+    @Test
+    public void voidTestWordsToPositionObj() throws Exception {
+        What3Words w3w = new What3Words(apiKey);
+        ThreeWords words = new ThreeWords("goldfish", "fuzzy", "aggregates");
+        Coordinates coords = w3w.wordsToPosition(words);
+        assertEquals(49.422636, coords.getLatitude(), 0.000001);
+        assertEquals(8.320833, coords.getLongitude(), 0.000001);
+    }
+
+    @Test
+    public void voidTestWordsToPositionWithLangObj() throws Exception {
+        What3Words w3w = new What3Words(apiKey);
+        ThreeWords words = new ThreeWords("kleid", "ober", "endlos");
+        Coordinates coords = w3w.wordsToPosition(words, "de");
+        assertEquals(49.422636, coords.getLatitude(), 0.000001);
+        assertEquals(8.320833, coords.getLongitude(), 0.000001);
+    }
+
+    @Test
+    public void testPositionToWordsObj() throws Exception {
+        What3Words w3w = new What3Words(apiKey);
+        Coordinates coordinates = new Coordinates(49.422636, 8.320833);
+        ThreeWords threeWords = w3w.positionToWords(coordinates);
+        assertEquals(new ThreeWords("goldfish", "fuzzy", "aggregates"), threeWords);
+    }
+
+    @Test
+    public void testPositionToWordsWithLangObj() throws Exception {
+        What3Words w3w = new What3Words(apiKey);
+        Coordinates coordinates = new Coordinates(49.422636, 8.320833);
+        ThreeWords threeWords = w3w.positionToWords(coordinates, "de");
+        assertEquals(new ThreeWords("kleid", "ober", "endlos"), threeWords);
+    }
+
 }

@@ -57,6 +57,15 @@ public class What3Words {
 		this.language = language;
 	}
 
+	public Coordinates wordsToPosition(ThreeWords threeWords, String language) throws IOException, What3WordsException {
+		double[] doubleCoordinates = wordsToPosition(new String[]{threeWords.getFirst(), threeWords.getSecond(), threeWords.getThird()});
+		return new Coordinates(doubleCoordinates[0], doubleCoordinates[1]);
+	}
+
+	public Coordinates wordsToPosition(ThreeWords threeWords) throws IOException, What3WordsException {
+		return wordsToPosition(threeWords, this.language);
+	}
+
 	/**
 	 * Converts 3 words into a position specifying default language.
 	 *
@@ -90,7 +99,7 @@ public class What3Words {
 		try {
 			// parse the coordinates out of the JSON
 			JSONObject json = new JSONObject(response);
-			if (json.has("position") == true) {
+			if (json.has("position")) {
 				JSONArray jsonCoords = (JSONArray) json.get("position");
 				double[] coords = new double[2];
 				coords[0] = jsonCoords.getDouble(0);
@@ -112,6 +121,15 @@ public class What3Words {
 			throw new What3WordsException(e.getMessage(), e);
 		}
 
+	}
+
+	public ThreeWords positionToWords(Coordinates coordinates, String language) throws IOException, What3WordsException {
+		String[] words = positionToWords(new double[]{coordinates.getLatitude(), coordinates.getLongitude()}, language);
+		return new ThreeWords(words[0], words[1], words[2]);
+	}
+
+	public ThreeWords positionToWords(Coordinates coordinates) throws IOException, What3WordsException {
+		return positionToWords(coordinates, this.language);
 	}
 
 	/**
