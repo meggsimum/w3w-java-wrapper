@@ -125,7 +125,6 @@ public class What3WordsTest extends TestCase {
 	 */
 	public void testChangeLang() {
 		What3Words w3w = new What3Words(API_KEY);
-		String defaultLanguage = w3w.getLanguage();
 		w3w.setLanguage("de");
 		double[] coords = {49.422636, 8.320833};
 		String[] words;
@@ -138,6 +137,15 @@ public class What3WordsTest extends TestCase {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
+	}
+
+	/**
+	 * Tests getLanguage method
+	 */
+	public void testGetLanguage() {
+		What3Words w3w = new What3Words(API_KEY);
+		String defaultLanguage = w3w.getLanguage();
+		assertEquals(defaultLanguage, "en");
 	}
 
 	/**
@@ -157,6 +165,9 @@ public class What3WordsTest extends TestCase {
 		assertTrue(thrown);
 	}
 
+	/**
+	 * Tests the position -> words API wrapper with french words with accents
+	 */
 	public void testNonAsciiCharatersFR() {
 		What3Words w3w = new What3Words(API_KEY, "fr");
 		String[] words = {"noël", "étain", "rizière"};
@@ -171,6 +182,9 @@ public class What3WordsTest extends TestCase {
 		}
 	}
 
+	/**
+	 * Tests the position -> words API wrapper with german words with accents
+	 */
 	public void testNonAsciiCharactersDE() {
 		What3Words w3w = new What3Words(API_KEY, "de");
 		String[] words = {"winkel", "artenschutz", "fängen"};
