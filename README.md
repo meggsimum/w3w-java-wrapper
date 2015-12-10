@@ -5,29 +5,7 @@ Use the what3words API in your Java applications.
 
 ## Methods
 
-  ```java
-  double[] wordsToPosition(String[] words)
-  ```
-
-  Converts a 3 words 'address' into a position (assumes words in the default language 'en')
-  
-  ```java
-  double[] wordsToPosition(String[] words, String language)
-  ```
-
-  Converts a 3 words 'address' (in the given language) into a position
-
-  ```java
-  String[] positionToWords(double[] coords)
-  ```
-
-  Converts a position into a 3 words 'address' (language 'en')
-  
-  ```java
-  String[] positionToWords(double[] coords, String language)
-  ```
-
-  Converts a position into a 3 words 'address' (in the given language)
+![ScreenShot](https://cloud.githubusercontent.com/assets/1185547/11721162/c1375aa0-9f62-11e5-873f-d1103118d36f.png)
 
 ## Code Samples
 
