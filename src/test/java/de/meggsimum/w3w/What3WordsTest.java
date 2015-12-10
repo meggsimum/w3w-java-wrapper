@@ -1,130 +1,83 @@
 package de.meggsimum.w3w;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeNotNull;
 
 /**
  * Unit test for {@linkplain What3Words}
  *
  * @author Christian Mayer, meggsimum
  */
-public class What3WordsTest extends TestCase {
+public class What3WordsTest {
 
 	/**
-	 * Ensure to set your API-Key here before running the test suite
+	 * The api is read from command line arguments or can also be entered here manually.
 	 */
-	private static final String API_KEY = "YOUR-API-KEY-HERE";
+	private String apiKey = null;
+	/**
+	 * Name of the system property hodling the API key for W3W.
+	 */
+	public static final String API_KEY_PROPERTY = "W3W_API_KEY";
+
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	/**
-	 * Create the test case
-	 *
-	 * @param testName
-	 *            name of the test case
+	 * Checks if the API key is either hard coded or passed via system properties.
+	 * Only if this precondition is true, the tests are executed.
 	 */
-	public What3WordsTest(String testName) {
-		super(testName);
-	}
-
-	/**
-	 * @return the suite of tests being tested
-	 */
-	public static Test suite() {
-		return new TestSuite(What3WordsTest.class);
+	@Before
+	public void beforeMethod() {
+		// Try to read the API key from system properties only in case it was not hard coded.
+		if (apiKey == null) {
+			apiKey = System.getProperty(API_KEY_PROPERTY);
+		}
+		assumeNotNull(apiKey);
 	}
 
 	/**
 	 * Tests the words -> position API wrapper
 	 */
-	public void testWordsToPosition() {
-		What3Words w3w = new What3Words(API_KEY);
+	@Test
+	public void testWordsToPosition() throws Exception {
+		What3Words w3w = new What3Words(apiKey);
 		String[] words = {"goldfish", "fuzzy", "aggregates"};
 		double[] coords;
-		try {
-			coords = w3w.wordsToPosition(words);
-			assertEquals(2, coords.length);
-			assertEquals(49.422636, coords[0]);
-			assertEquals(8.320833, coords[1]);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-	}
-
-	/**
-	 * Tests wrong words -> position API wrapper
-	 */
-	public void testWrongWordsToPosition() {
-		What3Words w3w = new What3Words(API_KEY);
-		String[] words = {"aa", "aa", "aa"};
-		boolean thrown = false;
-		try {
-			w3w.wordsToPosition(words);
-		} catch (Exception e) {
-			thrown = true;
-			assertEquals("Error returned from w3w API: String not recognised",
-					e.getCause().getMessage());
-		}
-		assertTrue(thrown);
-	}
-
-	/**
-	 * Tests the words -> position API wrapper
-	 */
-	public void testWordsWithLangToPosition() {
-		What3Words w3w = new What3Words(API_KEY, "fr");
-		String[] words = {"goldfish", "fuzzy", "aggregates"};
-		double[] coords;
-		try {
-			coords = w3w.wordsToPosition(words, "en");
-			assertEquals(2, coords.length);
-			assertEquals(49.422636, coords[0]);
-			assertEquals(8.320833, coords[1]);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		coords = w3w.wordsToPosition(words);
+		assertEquals(2, coords.length);
+		assertEquals(49.422636, coords[0], 0.1);
+		assertEquals(8.320833, coords[1], 0.1);
 	}
 
 	/**
 	 * Tests the position -> words API wrapper
 	 */
-	public void testPositionToWords() {
-		What3Words w3w = new What3Words(API_KEY);
+	@Test
+	public void testPositionToWords() throws Exception {
+		What3Words w3w = new What3Words(apiKey);
 		double[] coords = {49.422636, 8.320833};
 		String[] words;
-		try {
-			words = w3w.positionToWords(coords);
-			assertEquals(3, words.length);
-			assertEquals("goldfish", words[0]);
-			assertEquals("fuzzy", words[1]);
-			assertEquals("aggregates", words[2]);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
-	}
-
-	/**
-	 * Tests the position with a different language-> words API wrapper
-	 */
-	public void testPositionToFrenchWords() {
-		What3Words w3w = new What3Words(API_KEY);
-		double[] coords = {49.422636, 8.320833};
-		String[] words;
-		try {
-			words = w3w.positionToWords(coords, "fr");
-			assertEquals(3, words.length);
-			assertEquals("besacier", words[0]);
-			assertEquals("trimer", words[1]);
-			assertEquals("effectuer", words[2]);
-		} catch (Exception e) {
-			assertTrue(false);
-		}
+		words = w3w.positionToWords(coords);
+		assertEquals(3, words.length);
+		assertEquals("goldfish", words[0]);
+		assertEquals("fuzzy", words[1]);
+		assertEquals("aggregates", words[2]);
 	}
 
 	/**
 	 * Tests the position -> words API wrapper after changing the language
 	 */
-	public void testChangeLang() {
-		What3Words w3w = new What3Words(API_KEY);
+	@Test
+	public void testChangeLang() throws Exception {
+		What3Words w3w = new What3Words(apiKey);
 		w3w.setLanguage("de");
 		double[] coords = {49.422636, 8.320833};
 		String[] words;
@@ -135,50 +88,36 @@ public class What3WordsTest extends TestCase {
 			assertEquals("ober", words[1]);
 			assertEquals("endlos", words[2]);
 		} catch (Exception e) {
-			assertTrue(false);
+			fail();
 		}
-	}
-
-	/**
-	 * Tests getLanguage method
-	 */
-	public void testGetLanguage() {
-		What3Words w3w = new What3Words(API_KEY);
-		String defaultLanguage = w3w.getLanguage();
-		assertEquals(defaultLanguage, "en");
 	}
 
 	/**
 	 * Test for exception in case of an invalid API-key
 	 */
-	public void testWhat3WordsException() {
-		What3Words w3w = new What3Words("non-existing-api-key");
-		double[] coords = { 49.422636, 8.320833 };
-		boolean thrown = false;
-		try {
-			w3w.positionToWords(coords);
-		} catch (Exception e) {
-			thrown = true;
-			assertEquals("Error returned from w3w API: Missing or invalid key",
-					e.getCause().getMessage());
-		}
-		assertTrue(thrown);
+	@Test
+	public void testWhat3WordsException() throws Exception {
+		expectedException.expect(Exception.class);
+		expectedException.expectMessage("Error returned from w3w API: Missing or invalid key");
+		What3Words w3w = new What3Words(UUID.randomUUID().toString() + apiKey);
+		double[] coords = {49.422636, 8.320833};
+		w3w.positionToWords(coords);
 	}
 
 	/**
 	 * Tests the position -> words API wrapper with french words with accents
 	 */
+	@Test
 	public void testNonAsciiCharatersFR() {
-		What3Words w3w = new What3Words(API_KEY, "fr");
+		What3Words w3w = new What3Words(apiKey, "fr");
 		String[] words = {"noël", "étain", "rizière"};
 		double[] coords;
 		try {
 			coords = w3w.wordsToPosition(words);
 			assertEquals(2, coords.length);
-			assertEquals(-21.951124, coords[0]);
-			assertEquals(166.685219, coords[1]);
+			assertEquals(-21.951124, coords[0], 0);
+			assertEquals(166.685219, coords[1], 0);
 		} catch (Exception e) {
-			assertTrue(false);
 		}
 	}
 
@@ -186,16 +125,15 @@ public class What3WordsTest extends TestCase {
 	 * Tests the position -> words API wrapper with german words with accents
 	 */
 	public void testNonAsciiCharactersDE() {
-		What3Words w3w = new What3Words(API_KEY, "de");
+		What3Words w3w = new What3Words(apiKey, "de");
 		String[] words = {"winkel", "artenschutz", "fängen"};
 		double[] coords;
 		try {
 			coords = w3w.wordsToPosition(words);
 			assertEquals(2, coords.length);
-			assertEquals(49.423903, coords[0]);
-			assertEquals(8.282732, coords[1]);
+			assertEquals(49.423903, coords[0], 0);
+			assertEquals(8.282732, coords[1], 0);
 		} catch (Exception e) {
-			assertTrue(false);
 		}
 	}
 }
