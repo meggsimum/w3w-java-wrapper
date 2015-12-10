@@ -1,21 +1,47 @@
 package de.meggsimum.w3w;
 
+/**
+ * Class represents a position object holding its coordinates (lat/lon).
+ */
 public class Coordinates {
+    
+    /** latitude of this coordinate */
     private double latitude;
+    
+    /** longitude of this coordinate */
     private double longitude;
 
+    /**
+     * Creates an empty {@linkplain Coordinates} object
+     * 
+     * @param latitude
+     * @param longitude
+     */
     public Coordinates() {
     }
 
+    /**
+     * Creates a {@linkplain Coordinates} object with the given latitude and
+     * longitude
+     * 
+     * @param latitude
+     * @param longitude
+     */
     public Coordinates(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
+    /**
+     * @return latitude
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * @return longitude
+     */
     public double getLongitude() {
         return longitude;
     }

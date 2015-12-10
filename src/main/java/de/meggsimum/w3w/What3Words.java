@@ -50,18 +50,41 @@ public class What3Words {
 	 * given language.
 	 *
 	 * @param apiKey
-	 * @param language default Language
+	 * @param language
+	 *            default Language
 	 */
 	public What3Words(String apiKey, String language) {
 		this.apiKey = apiKey;
 		this.language = language;
 	}
 
+	/**
+	 * Converts 3 words object (in the given language) into a position object.
+	 * 
+	 * @param threeWords
+	 *            "w3w-address" object in the given language
+	 * @param language
+	 *            string defining the language of the words (e.g. "de")
+	 * @return coordinates object holding the coordinates reprsenting the given
+	 *         words
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
 	public Coordinates wordsToPosition(ThreeWords threeWords, String language) throws IOException, What3WordsException {
 		double[] doubleCoordinates = wordsToPosition(new String[]{threeWords.getFirst(), threeWords.getSecond(), threeWords.getThird()});
 		return new Coordinates(doubleCoordinates[0], doubleCoordinates[1]);
 	}
 
+	/**
+	 * Converts 3 words object into a position object.
+	 * 
+	 * @param threeWords
+	 *            "w3w-address" object in the given language
+	 * @return coordinates object holding the coordinates reprsenting the given
+	 *         words
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
 	public Coordinates wordsToPosition(ThreeWords threeWords) throws IOException, What3WordsException {
 		return wordsToPosition(threeWords, this.language);
 	}
@@ -123,11 +146,30 @@ public class What3Words {
 
 	}
 
+	/**
+	 * Converts a position object into a "w3w-address" object (in the given
+	 * language)
+	 * 
+	 * @param position object holding the coordinates to be transformed
+	 * @param language string defining the language of the words (e.g. "de") 
+	 * @return "w3w-address" object in the given language
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
 	public ThreeWords positionToWords(Coordinates coordinates, String language) throws IOException, What3WordsException {
 		String[] words = positionToWords(new double[]{coordinates.getLatitude(), coordinates.getLongitude()}, language);
 		return new ThreeWords(words[0], words[1], words[2]);
 	}
 
+	/**
+	 * Converts a position object into a "w3w-address" object with default
+	 * language.
+	 * 
+	 * @param position object holding the coordinates to be transformed
+	 * @return "w3w-address" object
+	 * @throws IOException
+	 * @throws What3WordsException
+	 */
 	public ThreeWords positionToWords(Coordinates coordinates) throws IOException, What3WordsException {
 		return positionToWords(coordinates, this.language);
 	}
