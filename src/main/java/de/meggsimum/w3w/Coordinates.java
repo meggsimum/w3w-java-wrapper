@@ -4,16 +4,16 @@ package de.meggsimum.w3w;
  * Class represents a position object holding its coordinates (lat/lon).
  */
 public class Coordinates {
-    
+
     /** latitude of this coordinate */
     private double latitude;
-    
+
     /** longitude of this coordinate */
     private double longitude;
 
     /**
      * Creates an empty {@linkplain Coordinates} object
-     * 
+     *
      * @param latitude
      * @param longitude
      */
@@ -23,7 +23,7 @@ public class Coordinates {
     /**
      * Creates a {@linkplain Coordinates} object with the given latitude and
      * longitude
-     * 
+     *
      * @param latitude
      * @param longitude
      */

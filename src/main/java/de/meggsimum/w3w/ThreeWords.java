@@ -5,13 +5,13 @@ package de.meggsimum.w3w;
  * words.
  */
 public class ThreeWords {
-    
+
     /** the first word of this "w3w-address" */
     private String first;
-    
+
     /** the first word of this "w3w-address" */
     private String second;
-    
+
     /** the first word of this "w3w-address" */
     private String third;
 
