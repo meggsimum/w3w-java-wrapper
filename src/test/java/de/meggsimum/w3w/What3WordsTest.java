@@ -98,7 +98,7 @@ public class What3WordsTest {
     @Test
     public void testWhat3WordsException() throws Exception {
         expectedException.expect(Exception.class);
-        expectedException.expectMessage("Error returned from w3w API: Missing or invalid key");
+        expectedException.expectMessage("Authentication failed; invalid API key");
         What3Words w3w = new What3Words(UUID.randomUUID().toString() + apiKey);
         double[] coords = {49.422636, 8.320833};
         w3w.positionToWords(coords);
