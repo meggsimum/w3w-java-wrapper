@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -34,7 +33,7 @@ public class What3Words {
     /**
      * the base URL to the w3w Web-API
      */
-    private String baseUrl = "https://api.what3words.com/";
+    private String baseUrl = "https://api.what3words.com/v2/";
 
     /**
      * Constructor creating a w3w-object bound to the given API-Key.
@@ -115,18 +114,18 @@ public class What3Words {
      */
     public double[] wordsToPosition(String[] words, String language) throws IOException,
                 What3WordsException {
-        String url = String.format("%sw3w?key=%s&string=%s.%s.%s&lang=%s" ,this.baseUrl, this.apiKey, words[0], words[1], words[2], language);
+        String url = String.format("%sforward?key=%s&addr=%s.%s.%s&lang=%s" ,this.baseUrl, this.apiKey, words[0], words[1], words[2], language);
 
         String response = this.doHttpGet(url);
 
         try {
             // parse the coordinates out of the JSON
             JSONObject json = new JSONObject(response);
-            if (json.has("position")) {
-                JSONArray jsonCoords = (JSONArray) json.get("position");
+            if (json.has("geometry")) {
+                JSONObject jsonCoords = (JSONObject) json.get("geometry");
                 double[] coords = new double[2];
-                coords[0] = jsonCoords.getDouble(0);
-                coords[1] = jsonCoords.getDouble(1);
+                coords[0] = (Double) jsonCoords.get("lat");
+                coords[1] = (Double) jsonCoords.get("lng");
 
                 return coords;
 
@@ -201,8 +200,7 @@ public class What3Words {
      */
     public String[] positionToWords(double[] coords, String language)
         throws What3WordsException, IOException {
-        String url = String.format("%sposition?key=%s&position=%s,%s&lang=%s" ,this.baseUrl, this.apiKey, coords[0], coords[1], language);
-
+        String url = String.format("%sreverse?key=%s&coords=%s,%s&lang=%s" ,this.baseUrl, this.apiKey, coords[0], coords[1], language);
         String response = this.doHttpGet(url);
 
         try {
@@ -210,16 +208,12 @@ public class What3Words {
             JSONObject json = new JSONObject(response);
 
             if (json.has("words") == true) {
-                JSONArray jsonWords = (JSONArray) json.get("words");
-                String[] words = new String[3];
-                words[0] = jsonWords.getString(0);
-                words[1] = jsonWords.getString(1);
-                words[2] = jsonWords.getString(2);
+                String jsonWords = (String) json.get("words");
+                String[] words = jsonWords.split("\\.");
 
                 return words;
 
-            } else if (json.has("error")) {
-
+            } else if (json.has("code")) {
                 throw new What3WordsException("Error returned from w3w API: "
                         + json.getString("message"));
 
@@ -247,12 +241,20 @@ public class What3Words {
 
         // ensure we use HTTP GET
         con.setRequestMethod("GET");
-
-        BufferedReader in = new BufferedReader(new InputStreamReader(
-                con.getInputStream()));
-        String inputLine;
         StringBuffer response = new StringBuffer();
+        BufferedReader in;
+        try {
+            // HTTP status codes 2xx
+            in = new BufferedReader(new InputStreamReader(
+                    con.getInputStream()));
 
+        } catch (IOException e) {
+            // HTTP status codes other than 2xx
+            in = new BufferedReader(new InputStreamReader(
+                    con.getErrorStream()));
+        }
+        // Read response body
+        String inputLine;
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
