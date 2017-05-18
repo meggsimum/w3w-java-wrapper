@@ -19,7 +19,7 @@ import static org.junit.Assume.assumeNotNull;
 public class What3WordsTest {
 
     /**
-     * The api is read from command line arguments or can also be entered here manually.
+     * The api key is read from command line arguments or can also be entered here manually.
      */
     private String apiKey = null;
     /**
@@ -39,6 +39,10 @@ public class What3WordsTest {
         // Try to read the API key from system properties only in case it was not hard coded.
         if (apiKey == null) {
             apiKey = System.getProperty(API_KEY_PROPERTY);
+        }
+        // Fall back to environment variable in case API key was not provided as property
+        if(apiKey == null) {
+            apiKey = System.getenv(API_KEY_PROPERTY);
         }
         assumeNotNull(apiKey);
     }
