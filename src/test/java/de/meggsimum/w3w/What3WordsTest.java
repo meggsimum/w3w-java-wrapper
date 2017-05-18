@@ -111,7 +111,7 @@ public class What3WordsTest {
     // Object API tests
 
     @Test
-    public void voidTestWordsToPositionObj() throws Exception {
+    public void testWordsToPositionObj() throws Exception {
         What3Words w3w = new What3Words(apiKey);
         ThreeWords words = new ThreeWords("goldfish", "fuzzy", "aggregates");
         Coordinates coords = w3w.wordsToPosition(words);
@@ -120,7 +120,7 @@ public class What3WordsTest {
     }
 
     @Test
-    public void voidTestWordsToPositionWithLangObj() throws Exception {
+    public void testWordsToPositionWithLangObj() throws Exception {
         What3Words w3w = new What3Words(apiKey);
         ThreeWords words = new ThreeWords("kleid", "ober", "endlos");
         Coordinates coords = w3w.wordsToPosition(words, "de");
