@@ -1,5 +1,5 @@
 # w3w-java-wrapper
-Java wrapper for the [what3words](http://what3words.com/) [web-API](http://developer.what3words.com/api).
+Java wrapper for the [what3words](http://what3words.com/) [web-API](https://docs.what3words.com/api/v2/).
 
 Use the what3words API in your Java applications.
 
