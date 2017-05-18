@@ -164,4 +164,23 @@ public class What3WordsTest {
         assertEquals(16.099389, coords[1], 0.000001);
     }
 
+    @Test
+    public void testWordsToPositionInvalid3WordAddress() throws Exception {
+        expectedException.expect(Exception.class);
+        expectedException.expectMessage("Invalid or non-existent 3 word address");
+        What3Words w3w = new What3Words(apiKey);
+        String[] words = {"no", "address", "here"};
+        double[] coords = w3w.wordsToPosition(words);
+
+    }
+
+    @Test
+    public void testPositionToWordsInvalidLanguage() throws Exception {
+        expectedException.expect(Exception.class);
+        expectedException.expectMessage("The 'lang' parameter is invalid or missing a language code");
+        What3Words w3w = new What3Words(apiKey);
+        double[] coords = {49.422636, 8.320833};
+        String[] words = w3w.positionToWords(coords, "XX");
+
+    }
 }

@@ -14,7 +14,7 @@ import org.json.JSONObject;
 /**
  * A Java wrapper for the What3Words Web-API.
  *
- * @see http://developer.what3words.com/api/
+ * @see <a href="https://docs.what3words.com/api/v2/">https://docs.what3words.com/api/v2/</a>
  *
  * @author Christian Mayer, meggsimum
  */
@@ -129,10 +129,21 @@ public class What3Words {
 
                 return coords;
 
-            } else if (json.has("error")) {
+            } else if (json.has("code")) {
 
                 throw new What3WordsException("Error returned from w3w API: "
                         + json.getString("message"));
+
+            } else if (json.has("status")) {
+
+                if(json.get("status") instanceof JSONObject) {
+                    JSONObject status = json.getJSONObject("status");
+                    throw new What3WordsException("Error returned from w3w API: "
+                            + status.getString("message"));
+                } else {
+                    throw new What3WordsException(
+                            "Undefined error while fetching words by position");
+                }
 
             } else {
                 throw new What3WordsException(
@@ -149,7 +160,7 @@ public class What3Words {
      * Converts a position object into a "w3w-address" object (in the given
      * language)
      *
-     * @param position object holding the coordinates to be transformed
+     * @param coordinates object holding the coordinates to be transformed
      * @param language string defining the language of the words (e.g. "de")
      * @return "w3w-address" object in the given language
      * @throws IOException
@@ -164,7 +175,7 @@ public class What3Words {
      * Converts a position object into a "w3w-address" object with default
      * language.
      *
-     * @param position object holding the coordinates to be transformed
+     * @param coordinates object holding the coordinates to be transformed
      * @return "w3w-address" object
      * @throws IOException
      * @throws What3WordsException
@@ -216,6 +227,17 @@ public class What3Words {
             } else if (json.has("code")) {
                 throw new What3WordsException("Error returned from w3w API: "
                         + json.getString("message"));
+
+            } else if (json.has("status")) {
+
+                if(json.get("status") instanceof JSONObject) {
+                    JSONObject status = json.getJSONObject("status");
+                    throw new What3WordsException("Error returned from w3w API: "
+                            + status.getString("message"));
+                } else {
+                    throw new What3WordsException(
+                            "Undefined error while fetching words by position");
+                }
 
             } else {
                 throw new What3WordsException(

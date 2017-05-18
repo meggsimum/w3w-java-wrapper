@@ -31,6 +31,13 @@ public class ThreeWords {
     }
 
     /**
+     * @return the 3 word address with full stops as `first.second.third`
+     */
+    public String get3WordAddress() {
+        return String.format("%s.%s.%s",this.first, this.second, this.third);
+    }
+
+    /**
      * @return first word of this "w3w-address"
      */
     public String getFirst() {
