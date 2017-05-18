@@ -100,7 +100,7 @@ public class What3WordsTest {
      * Test for exception in case of an invalid API-key
      */
     @Test
-    public void testWhat3WordsException() throws Exception {
+    public void testInvalidWhat3WordsAPIKeyException() throws Exception {
         expectedException.expect(Exception.class);
         expectedException.expectMessage("Authentication failed; invalid API key");
         What3Words w3w = new What3Words(UUID.randomUUID().toString() + apiKey);
@@ -142,6 +142,26 @@ public class What3WordsTest {
         Coordinates coordinates = new Coordinates(49.422636, 8.320833);
         ThreeWords threeWords = w3w.positionToWords(coordinates, "de");
         assertEquals(new ThreeWords("kleid", "ober", "endlos"), threeWords);
+    }
+
+    @Test
+    public void testGerman3wordAddress()throws Exception  {
+        What3Words w3w = new What3Words(apiKey, "de");
+        String[] words = {"zulassen", "fährst", "wächst"};
+        double[] coords = w3w.wordsToPosition(words);
+        assertEquals(2, coords.length);
+        assertEquals(50.049496, coords[0], 0.000001);
+        assertEquals(-110.681137, coords[1], 0.000001);
+    }
+
+    @Test
+    public void testFrench3wordAddress()throws Exception  {
+        What3Words w3w = new What3Words(apiKey, "fr");
+        String[] words = {"garçon", "étaler", "frôler"};
+        double[] coords = w3w.wordsToPosition(words);
+        assertEquals(2, coords.length);
+        assertEquals(48.246860, coords[0], 0.000001);
+        assertEquals(16.099389, coords[1], 0.000001);
     }
 
 }
