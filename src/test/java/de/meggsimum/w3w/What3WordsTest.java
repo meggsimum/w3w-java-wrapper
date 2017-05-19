@@ -19,7 +19,7 @@ import static org.junit.Assume.assumeNotNull;
 public class What3WordsTest {
 
     /**
-     * The api is read from command line arguments or can also be entered here manually.
+     * The api key is read from command line arguments or can also be entered here manually.
      */
     private String apiKey = null;
     /**
@@ -39,6 +39,10 @@ public class What3WordsTest {
         // Try to read the API key from system properties only in case it was not hard coded.
         if (apiKey == null) {
             apiKey = System.getProperty(API_KEY_PROPERTY);
+        }
+        // Fall back to environment variable in case API key was not provided as property
+        if(apiKey == null) {
+            apiKey = System.getenv(API_KEY_PROPERTY);
         }
         assumeNotNull(apiKey);
     }
@@ -96,7 +100,7 @@ public class What3WordsTest {
      * Test for exception in case of an invalid API-key
      */
     @Test
-    public void testWhat3WordsException() throws Exception {
+    public void testInvalidWhat3WordsAPIKeyException() throws Exception {
         expectedException.expect(Exception.class);
         expectedException.expectMessage("Authentication failed; invalid API key");
         What3Words w3w = new What3Words(UUID.randomUUID().toString() + apiKey);
@@ -107,7 +111,7 @@ public class What3WordsTest {
     // Object API tests
 
     @Test
-    public void voidTestWordsToPositionObj() throws Exception {
+    public void testWordsToPositionObj() throws Exception {
         What3Words w3w = new What3Words(apiKey);
         ThreeWords words = new ThreeWords("goldfish", "fuzzy", "aggregates");
         Coordinates coords = w3w.wordsToPosition(words);
@@ -116,7 +120,7 @@ public class What3WordsTest {
     }
 
     @Test
-    public void voidTestWordsToPositionWithLangObj() throws Exception {
+    public void testWordsToPositionWithLangObj() throws Exception {
         What3Words w3w = new What3Words(apiKey);
         ThreeWords words = new ThreeWords("kleid", "ober", "endlos");
         Coordinates coords = w3w.wordsToPosition(words, "de");
@@ -140,4 +144,43 @@ public class What3WordsTest {
         assertEquals(new ThreeWords("kleid", "ober", "endlos"), threeWords);
     }
 
+    @Test
+    public void testGerman3wordAddress()throws Exception  {
+        What3Words w3w = new What3Words(apiKey, "de");
+        String[] words = {"zulassen", "fährst", "wächst"};
+        double[] coords = w3w.wordsToPosition(words);
+        assertEquals(2, coords.length);
+        assertEquals(50.049496, coords[0], 0.000001);
+        assertEquals(-110.681137, coords[1], 0.000001);
+    }
+
+    @Test
+    public void testFrench3wordAddress()throws Exception  {
+        What3Words w3w = new What3Words(apiKey, "fr");
+        String[] words = {"garçon", "étaler", "frôler"};
+        double[] coords = w3w.wordsToPosition(words);
+        assertEquals(2, coords.length);
+        assertEquals(48.246860, coords[0], 0.000001);
+        assertEquals(16.099389, coords[1], 0.000001);
+    }
+
+    @Test
+    public void testWordsToPositionInvalid3WordAddress() throws Exception {
+        expectedException.expect(Exception.class);
+        expectedException.expectMessage("Invalid or non-existent 3 word address");
+        What3Words w3w = new What3Words(apiKey);
+        String[] words = {"no", "address", "here"};
+        double[] coords = w3w.wordsToPosition(words);
+
+    }
+
+    @Test
+    public void testPositionToWordsInvalidLanguage() throws Exception {
+        expectedException.expect(Exception.class);
+        expectedException.expectMessage("The 'lang' parameter is invalid or missing a language code");
+        What3Words w3w = new What3Words(apiKey);
+        double[] coords = {49.422636, 8.320833};
+        String[] words = w3w.positionToWords(coords, "XX");
+
+    }
 }
